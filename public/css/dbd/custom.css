@@ -1,0 +1,314 @@
+/*!
+ * Custom CSS for sb-admin
+*/
+
+
+body {
+/*    background: red;*/
+}
+
+h1 {
+/*    color: blue !important;*/
+    font-size: 1.8em;
+    padding-bottom: 0.2em;
+    margin-bottom: 0.3em;
+    border-bottom: 1px solid #ddd;
+    //color: red;
+}
+.navbar-dark,
+.navbar-sidenav {
+	background: #010023 !important;
+}
+
+
+.btn {
+	cursor: pointer;
+}
+.btn-purple {
+	background: #7324b7;
+}
+.btn-purple:hover {
+	background-color: #5b1894;
+}
+.hide {
+	display: none;
+}
+.del-spareimg {
+	//padding-top: 0.4em;
+	cursor: pointer;
+}
+.thisActive {
+	//background: #aaa !important;
+	color: #fff !important;
+}
+
+.text-big {
+	font-size: 1.2em;
+}
+.text-small {
+	font-size: 0.9em;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.text-orange {
+	color: darkorange;
+}
+.bg-pink {
+	background: lavenderblush;
+}
+.bg-green {
+	background: mintcream;
+}
+.bg-gray {
+	background: #f6f6f6;
+}
+.bg-blue {
+	background: #5cb3ef;
+}
+.btn-blue {
+	background: #3A9BEB;
+}
+.border-gray {
+	border: 1px solid #ebebeb;
+}
+
+.open-tgl {
+	cursor: pointer;
+}
+.table-second-wrap {
+	display: none;
+}
+
+.btn-box {
+	position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background: #efefef;
+    overflow-y: scroll;
+    z-index: 999;
+}
+
+
+/*  */
+.table-responsive {
+	padding: 0.5em 0 0.7em !important;
+    //border: 1px solid red;
+}
+
+.table-fixed {
+	table-layout: fixed;
+}
+
+/*<div class=​"col-sm-12 col-md-6">​*/
+/*<div class=​"dataTables_filter" id=​"dataTable_filter">​*/
+/*<label>​*/
+/*"Search:"*/
+/*<input type=​"search" class=​"form-control form-control-sm" placeholder aria-controls=​"dataTable">​*/
+/*</label>​*/
+/*</div>​*/
+/*</div>*/
+
+#dataTable_wrapper {
+	width: 100% !important;
+	//padding: 0 !important;
+    //border: 1px solid red;
+}
+.dataTables_filter {
+	//border: 1px solid red;
+}
+input[type="search"].form-control {
+	width: 23em !important;
+}
+
+.paginate_button a {
+	outline: 0 !important;
+}
+
+.table-tyumon th {
+	width: 27%;
+	background: #f1f1f1;
+}
+
+label {
+	font-weight: bold;
+	color: #555;
+	font-size: 1.05em;
+}
+label em {
+	color: red;
+    font-style: none;
+    font-size: 1.1em;
+}
+
+
+
+.no-img {
+    display: block;
+    width: 85px;
+    height: 85px;
+    line-height: 80px;
+    text-align: center;
+    background: #FCFCFB;
+    border: 1px solid #dfdfdf;
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+.thumb-prev .no-img {
+    width: 100%;
+    height: 160px;
+    line-height: 160px;
+}
+.spare-img .thumb-prev {
+	height: 130px;
+	overflow: hidden;
+}
+.spare-img .thumb-prev .no-img {
+	height: 100%;
+	line-height: 130px;
+}
+.thumb-prev img,
+.thumb-prev video {
+    width: 100%;
+}
+
+.content-wrapper {
+	padding-left: 1em;
+/*    background: red;*/
+/*    border: 2px solid red;*/
+}
+.bg-midLight {
+    background: #fdfcfb;    
+/*    background: blue;*/
+}
+
+
+/* block-all-wrap */
+.block-tgl {
+	cursor: pointer;
+}
+.block-all-wrap {
+	display: none;
+}
+
+/* Mail Preview */
+.content-wrapper {
+	//border: 2px solid red;
+
+}
+.order-form-wrap {
+	//border: 2px solid orange;
+}
+.mail-preview-wrap {
+	display: none;
+	height: 90%;
+    width: 60%;
+    background: #fdfcfb;
+    overflow-y: scroll;
+    position: fixed;
+    z-index: 998;
+    top: 5em;
+    padding: 4em 1.5em 4em;
+}
+.mail-preview {
+	font-size: 0.95em;
+    //z-index: 9;
+    height: 78%;
+    width: 80%;
+    overflow-y: scroll;
+    background: #fdfdfd;
+    border: 1px solid #aaa;
+    padding: 1.5em;
+    //width: 100%;
+    //background: #fff;
+    //left: 0;
+    
+}
+.preview-tgl {
+	position: fixed;
+    width: 2.8em;
+    text-align: center;
+    top: 4.3em;
+    left: 50%;
+    z-index: 999;
+    background: #3a3a3a;
+    color: #fff;
+    padding: 0.5em 0;
+    border-radius: 0.2em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.spare-tgl {
+	cursor: pointer;
+}
+.spare-tgl:hover {
+	opacity: 0.7;
+}
+.spare-box {
+	display: none;
+}
+
+
+/* Tag */
+/* TagList */
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+a.ui-button:active,
+.ui-button:active,
+.ui-button.ui-state-active:hover {
+    background: skyblue;
+}
+/* TagList END */
+.tag-wrap {
+    margin: 3em 0 5em;
+}
+.tag-group {
+    margin-bottom: 2em;
+}
+.tag-group .tag-control {
+    display: inline;
+    //width: 30%;
+}
+.tag-group .tag-control + .add-btn {
+    display: none;
+    width: auto;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 0.4em 0.5em;
+    background: #fdfcfc;
+}
+.tag-area {
+    margin-top: 0.8em;
+    width: 100%;
+}
+.tag-area span {
+    display: inline-block;
+    margin-right: 0.5em;
+    word-wrap: break-word;
+    margin-bottom: 0.8em;
+}
+.tag-area em {
+    border: 1px solid #ccc;
+    background: linen;
+    padding: 0.3em 0.6em;
+    border-radius: 2px;
+    font-style: normal;
+    text-align: center;
+}
+.tag-area em + .fa { /* xマーク */
+    display: inline-block;
+    font-size: 0.8em;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.7em;
+    text-align: center;
+    margin-left: 0.2em;
+    border: 1px solid #aaa;
+    border-radius: 50%;
+    cursor: pointer;
+    vertical-align: top;
+}
