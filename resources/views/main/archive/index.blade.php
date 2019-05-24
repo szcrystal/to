@@ -1,14 +1,12 @@
 @extends('layouts.app')
 
 <?php
-use App\TopSetting;
+// use App\Setting;
 ?>
 
 @section('belt')
 <div class="tophead-wrap">
-    <div class="clearfix">
-        {!! nl2br(TopSetting::get()->first()->contents) !!}
-    </div>
+
     
     @if(isset($isTop) && $isTop)
         @include('main.shared.carousel')
@@ -16,11 +14,11 @@ use App\TopSetting;
 </div>
 @endsection
 
-
+{{--
 @section('bread')
 @include('main.shared.bread')
 @endsection
-
+--}}
 
 @section('content')
 
@@ -48,19 +46,21 @@ use App\TopSetting;
             
         @elseif($type == 'tag')
             タグ：{{ $tag->name }}
-            <?php $orgObj = $tag; ?>
+            <?php $objs = $userImgs; ?>
             
         @elseif($type=='search')
             検索ワード：
             @if($searchStr == '')
                 未入力です
             @else
-                @if(!count($items))
+                @if(!count($userImgs))
                 {{ $searchStr }}の商品がありません
                 @else
                 {{ $searchStr }}
                 @endif
             @endif
+            
+            <?php $objs = $userImgs; ?>
             
         @elseif($type == 'unique')
             {{ $title }}
@@ -70,39 +70,20 @@ use App\TopSetting;
         
     <div class="panel-body">
         
-        @if($type == 'category' || $type == 'subcategory' || $type == 'tag')
-            @if(Request::query('page') < 2)
-                @include('main.shared.upper')
-            
-                @if(isset($orgObj->upper_title) || isset($orgObj->upper_text))
-                    <div class="mb-4">
-                        @if(isset($orgObj->upper_title) && $orgObj->upper_title != '')
-                            <h3 class="upper-title">{{ $orgObj->upper_title }}</h3>
-                        @endif
-                        
-                        @if(isset($orgObj->upper_text) && $orgObj->upper_text != '')
-                            <p class="upper-text px-1 m-0">{!! nl2br($orgObj->upper_text) !!}</p>
-                        @endif
-                    
-                    </div>
-                @endif
-            @endif
-        @endif
-        
         
         <div class="pagination-wrap">
-            {{ $items->links() }}
+            {{ $userImgs->links() }}
         </div>
         
         <?php 
             $n = Ctm::isAgent('sp') ? 3 : 4;
-            $itemArr = array_chunk($items->all(), $n); 
+            $itemArr = array_chunk($objs->all(), $n); 
         ?>
         
         @foreach($itemArr as $itemVal)
             <div class="clearfix">
 
-            @foreach($itemVal as $item)
+            @foreach($itemVal as $userImg)
                 <article class="main-atcl">
                         
                     <?php $strNum = Ctm::isAgent('sp') ? 16 : 25; ?>
@@ -117,7 +98,7 @@ use App\TopSetting;
     </div>
         
     <div class="pagination-wrap">
-        {{ $items->links() }}
+        {{ $userImgs->links() }}
     </div>
             
 </div>
@@ -126,8 +107,9 @@ use App\TopSetting;
 @endsection
 
 
+{{--
 @section('leftbar')
     @include('main.shared.leftbar')
 @endsection
-
+--}}
 

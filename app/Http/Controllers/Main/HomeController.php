@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Main;
 
 use App\Setting;
+use App\UserImg;
+use App\Tag;
+use App\TagRelation;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -11,7 +14,7 @@ use Ctm;
 
 class HomeController extends Controller
 {
-    public function __construct(Setting $setting/*Item $item, Category $category, CategorySecond $cateSec, Tag $tag, TagRelation $tagRel, Fix $fix, Setting $setting, ItemImage $itemImg, Favorite $favorite, ItemStockChange $itemSc, TopSetting $topSet, DeliveryGroup $dg, DeliveryGroupRelation $dgRel, Auth $auth*/)
+    public function __construct(Setting $setting, UserImg $userImg, Tag $tag, TagRelation $tagRel/*Item $item, Category $category, CategorySecond $cateSec, Tag $tag, TagRelation $tagRel, Fix $fix, Setting $setting, ItemImage $itemImg, Favorite $favorite, ItemStockChange $itemSc, TopSetting $topSet, DeliveryGroup $dg, DeliveryGroupRelation $dgRel, Auth $auth*/)
     {
         //$this->middleware('search');
         
@@ -24,6 +27,10 @@ class HomeController extends Controller
 //
         $this->setting = $setting;
         $this->set = $this->setting->first();
+        
+        $this->userImg = $userImg;
+        $this->tag = $tag;
+        $this->tagRel = $tagRel;
 //        $this->itemImg = $itemImg;
 //        $this->favorite = $favorite;
 //        $this->itemSc = $itemSc;
@@ -33,7 +40,7 @@ class HomeController extends Controller
 //        $this->dgRel = $dgRel;
 //                
 //        //ここでAuth::check()は効かない
-        $this->whereArr = ['open_status'=>1, 'is_potset'=>0]; //こことSingleとSearchとCtm::isPotParentAndStockにある
+        $this->whereArr = ['open_status'=>1]; //こことSingleとSearchとCtm::isPotParentAndStockにある
                 
         $this->perPage = Ctm::isAgent('sp') ? 21 : 20;
         
@@ -49,24 +56,27 @@ class HomeController extends Controller
         
         $whereArr = $this->whereArr;
         
+        $userImgs = $this->userImg->where($whereArr)->orderBy('view_count', 'desc')->get();
+        
+        $popTags = $this->tag->orderBy('view_count', 'asc')->take(20)->get();
         
 //        $tagIds = TagRelation::where('item_id', 1)->get()->map(function($obj){
 //            return $obj->tag_id;
 //        })->all();
 //        
 //        $strs = implode(',', $tagIds);
-        
+//        
 //        $placeholder = '';
 //        foreach ($tagIds as $key => $value) {
 //           $placeholder .= ($key == 0) ? $value : ','.$value;
 //        }
-//        //exit;
-//        
-//    //    $strs = "FIELD(id, $strs)";
-//    //    echo $strs;
-//        //exit;
-//        
-//        //->orderByRaw("FIELD(id, $sortIDs)"
+        //exit;
+        
+    //    $strs = "FIELD(id, $strs)";
+    //    echo $strs;
+        //exit;
+        
+        //->orderByRaw("FIELD(id, $sortIDs)"
 //        $tags = Tag::whereIn('id', $tagIds)->orderByRaw("FIELD(id, $placeholder)")->take(2)->get();
 //        print_r($tags);
 //        exit;
@@ -186,14 +196,53 @@ class HomeController extends Controller
         $isTop = 1;
         
 
-        return view('main.home.index', ['metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'isTop'=>$isTop,]);
+        return view('main.home.index', ['userImgs'=>$userImgs, 'popTags'=>$popTags,'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'isTop'=>$isTop,]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
+    public function tagIndex($slug)
+    {
+    	$tag = $this->tag->where('slug', $slug)/*->where($this->whereArr)*/->first();
+        
+        if(!isset($tag)) {
+            abort(404);
+        }
+    	
+        $imgIds = TagRelation::where('tag_id', $tag->id)->get()->map(function($obj){
+            return $obj->img_id;
+        })->all();
+        
+        $userImgs = $this->userImg->whereIn('id', $imgIds)->where($this->whereArr)->orderBy('created_at', 'desc')->paginate($this->perPage);
+        
+        //$strs = implode(',', $tagIds);
+        //$placeholder = '';
+        
+//        foreach ($tagIds as $key => $value) {
+//           $placeholder .= ($key == 0) ? $value : ','.$value;
+//        }
+//        exit;
+//        
+//        $strs = "FIELD(id, $strs)";
+//        echo $strs;
+//        exit;
+        
+        //->orderByRaw("FIELD(id, $sortIDs)"
+//        $tags = Tag::whereIn('id', $tagIds)->orderByRaw("FIELD(id, $placeholder)")->take(2)->get();
+//        print_r($tags);
+//        exit;
+
+		$metaTitle = '';
+        $metaDesc = '';
+        $metaKeyword = '';
+        
+        $type = 'tag';
+        
+        $tag->timestamps = false;
+        $tag->increment('view_count');
+
+		return view('main.archive.index', ['userImgs'=>$userImgs, 'tag'=>$tag, 'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'type'=>$type]);
+    }
+    
     public function create()
     {
         //

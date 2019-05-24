@@ -17,6 +17,7 @@ class CreateTagsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->nullable()->default(NULL);
             $table->string('slug')->unique()->nullable()->default(NULL);
+            $table->boolean('open_status')->nullable()->default(1);
 			$table->integer('view_count')->nullable()->default(0);
             
             $table->timestamps();

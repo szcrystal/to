@@ -39,6 +39,8 @@ Route::resource('dashboard/settings', 'DashBoard\SettingController');
 //Search
 Route::get('search', 'Main\SearchController@index');
 
+//Tag
+Route::get('tag/{slug}', 'Main\HomeController@tagIndex');
 
 //Single
 Route::get('post/{id}', 'Main\SingleController@index');

@@ -9,6 +9,7 @@ class Tag extends Model
     protected $fillable = [
         'name',
         'slug',
+        'open_status',
         'view_count',
     ];
 }
