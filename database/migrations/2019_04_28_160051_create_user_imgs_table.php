@@ -17,6 +17,7 @@ class CreateUserImgsTable extends Migration
             $table->bigIncrements('id');
             
             $table->integer('user_id')->nullable()->default(NULL);
+            $table->integer('cate_id')->nullable()->default(NULL);
             $table->string('img_path')->nullable()->default(NULL);
             $table->text('explain')->nullable()->default(NULL);
             $table->string('target_url')->nullable()->default(NULL);

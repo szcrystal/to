@@ -1,6 +1,7 @@
 <?php
 use App\Setting;
-
+use App\Favorite;
+use App\Good;
 ?>
 
 <?php
@@ -55,11 +56,18 @@ use App\Setting;
         @include('main.shared.tag')
     </div>
             
-        
-    <div class="price">
-        
-        
-    </div>
+    
+    @if(! isset($isTop))
+        <div class="price">
+            <?php
+                $favCount = Favorite::where('img_id', $userImg->id)->get()->count();
+                $goodCount = Good::where('img_id', $userImg->id)->get()->count();
+            ?>
+            
+            <span class="mr-2"><i class="fas fa-heart"></i> {{ $favCount }}</span>
+            <span><i class="fas fa-thumbs-up"></i> {{ $goodCount }}</span>
+        </div>
+    @endif
 
                 <?php
 //                    if(Favorite::where(['user_id'=>Auth::id(), 'item_id'=>$item->id])->first()) {

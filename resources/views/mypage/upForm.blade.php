@@ -123,6 +123,37 @@
                 </div>
                 
                 
+                <fieldset>
+                	<select class="form-control col-md-6 mt-2{{ $errors->has('cate_id') ? ' is-invalid' : '' }}" name="cate_id">
+                        
+						<option value="0">選択して下さい</option>
+                        
+                    	@foreach($allCates as $cate)
+                        	<?php
+								$selected = '';
+                                
+                                if(Ctm::isOld()) {
+                                    if(old('cate_id') == $cate->id) $selected = 'selected';
+                                }
+                                else {
+                                    if(isset($userImg)) {
+                                    	if($userImg->cate_id == $cate->id) $selected = 'selected';
+                                    }
+                                }
+                            ?>
+                            
+                    		<option value="{{ $cate->id }}" {{ $selected }}>{{ $cate->name }}</option>
+                    	@endforeach
+                    
+                    </select>
+                	
+                    @if ($errors->has('cate_id'))
+                        <div class="text-danger">
+                            <span class="fa fa-exclamation form-control-feedback"></span>
+                            <span>{{ $errors->first('cate_id') }}</span>
+                        </div>
+                    @endif
+                </fieldset>
                 
                 
                 <fieldset>

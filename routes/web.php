@@ -31,6 +31,9 @@ Route::get('dashboard/logout', 'DashBoard\HomeController@getLogout');
 //setting
 Route::resource('dashboard/settings', 'DashBoard\SettingController');
 
+//Category
+Route::resource('dashboard/categories', 'DashBoard\CategoryController');
+
 
 
 

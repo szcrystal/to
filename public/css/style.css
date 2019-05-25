@@ -1665,6 +1665,14 @@ ul.side-rank {
 /*<button class=​"slick-prev slick-arrow" aria-label=​"Previous" type=​"button" style>​Previous​</button>​*/
 /* Slider END ****************** */
 
+.icon-wrap {
+	width: 100px;
+    height: 100px;
+	display: inline-block;
+    //border: 1px solid red;
+	border-radius: 100%;
+    overflow: hidden;
+}
 
 .single .head-frame h2 {
 	font-weight: normal;

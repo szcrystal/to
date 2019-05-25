@@ -2,8 +2,9 @@
 
 <?php
 use App\User;
-
 use App\Setting;
+use App\Favorite;
+use App\Good;
 ?>
 
 
@@ -61,10 +62,7 @@ use App\Setting;
                                 </a>
                                 @endif
                             </div>
-                            
-                            
-                                                     
-                          
+
                           <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"><i class="fal fa-angle-left"></i></span>
                             <span class="sr-only">Previous</span>
@@ -90,6 +88,15 @@ use App\Setting;
                 	{{ $userImg->explain }}
                 </div>
 
+				<div class="mt-3">
+                	<?php
+                        $favCount = Favorite::where('img_id', $userImg->id)->get()->count();
+                        $goodCount = Good::where('img_id', $userImg->id)->get()->count();
+                    ?>
+                    
+                    <span class="mr-2"><i class="fas fa-heart"></i> {{ $favCount }}</span>
+                    <span><i class="fas fa-thumbs-up"></i> {{ $goodCount }}</span>
+                </div>
 
 			</div><!-- left -->
             
@@ -101,7 +108,11 @@ use App\Setting;
             	
                 <?php //================================================================= ?>
                 
-                	<span class="w-25"><img src="{{ Storage::url($user->icon_img_path) }}" class="w-25 rounded-5"></span>{{ $user->name }}
+                	<span class="icon-wrap">
+                    	<img src="{{ Storage::url($user->icon_img_path) }}" class="img-fluid">
+                    </span>
+                    
+                    {{ $user->name }}
                 
                 	<h2 class="single-title">{{ $userImg -> explain }}<br><span></span></h2>
                  	

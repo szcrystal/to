@@ -4,15 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserImg extends Model
+class Category extends Model
 {
     protected $fillable = [
-        'user_id',
-        'cate_id',
-        'img_path',
-        'explain',
-        'target_url',
-        'sort_num',
+        'name',
+        'slug',
+        'link_name',
         'open_status',
         'view_count',
     ];

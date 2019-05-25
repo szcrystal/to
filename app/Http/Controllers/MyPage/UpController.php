@@ -4,6 +4,7 @@ namespace App\Http\Controllers\MyPage;
 
 use App\User;
 use App\UserImg;
+use App\Category;
 use App\Tag;
 use App\TagRelation;
 use App\Setting;
@@ -15,18 +16,21 @@ use Auth;
 
 class UpController extends Controller
 {
-    public function __construct(User $user, UserImg $userImg, Tag $tag, TagRelation $tagRelation, Setting $setting)
+    public function __construct(User $user, UserImg $userImg, Category $cate, Tag $tag, TagRelation $tagRelation, Setting $setting)
     {
         $this -> middleware('auth');
     
     	$this->user = $user;
     	$this->userImg = $userImg;
         
+        $this->cate = $cate;
         $this->tag = $tag;
         $this->tagRel = $tagRelation;
         
         $this->set = $setting->first();
         
+        
+        $this->whereArr = ['open_status'=>1];
         $this->perPage = 20;
     
     }
@@ -81,6 +85,9 @@ class UpController extends Controller
         
         //$users = $this->user->where('active',1)->get();
         
+        //Cate
+        $allCates = $this->cate->where($this->whereArr)->get();
+        
 		$tagNames = $this->tagRel->where(['img_id'=>$imgId])->orderBy('sort_num', 'asc')->get()->map(function($obj) {
             return $this->tag->find($obj->tag_id)->name;
         })->all();
@@ -97,7 +104,7 @@ class UpController extends Controller
         
         //$icons = $this->icon->all();
         
-        return view('mypage.upform', ['userImg'=>$userImg, /*'cates'=>$cates, 'subcates'=>$subcates, 'consignors'=>$consignors, 'dgs'=>$dgs,*/'tagNames'=>$tagNames, 'allTags'=>$allTags, 'spares'=>$spares, /*'snaps'=>$snaps, */'primaryCount'=>$primaryCount, 'editId'=>$imgId, 'edit'=>1]);
+        return view('mypage.upform', ['userImg'=>$userImg, /*'cates'=>$cates, 'subcates'=>$subcates, 'consignors'=>$consignors, 'dgs'=>$dgs,*/'tagNames'=>$tagNames, 'allCates'=>$allCates, 'allTags'=>$allTags, 'spares'=>$spares, /*'snaps'=>$snaps, */'primaryCount'=>$primaryCount, 'editId'=>$imgId, 'edit'=>1]);
     }
     
     
@@ -109,6 +116,9 @@ class UpController extends Controller
         $userImgs = $this->userImg->where('user_id',$uId)->get();
         
         $primaryCount = 1;
+        
+        //Cate
+        $allCates = $this->cate->where($this->whereArr)->get();
         
         //Tag
         $tagNames = array();
@@ -124,7 +134,7 @@ class UpController extends Controller
         
         //$editId = 0;
         
-        return view('mypage.upForm', ['user'=>$user, 'userImgs'=>$userImgs, 'primaryCount'=>$primaryCount,/* 'editId'=>$editId,*/ 'tagNames'=>$tagNames, 'allTags'=>$allTags, ]);
+        return view('mypage.upForm', ['user'=>$user, 'userImgs'=>$userImgs, 'primaryCount'=>$primaryCount,/* 'editId'=>$editId,*/ 'tagNames'=>$tagNames, 'allCates'=>$allCates, 'allTags'=>$allTags, ]);
     }
 
     /**
@@ -141,7 +151,7 @@ class UpController extends Controller
     	$rules = [
 //        	'number' => 'required|unique:items,number,'.$editId,
 //            'title' => 'required|max:255',
-//            'cate_id' => 'required',
+            'cate_id' => 'required',
 //            
 //            'pot_sort' => [
 //            	'nullable',
