@@ -58,7 +58,7 @@ class HomeController extends Controller
         
         $userImgs = $this->userImg->where($whereArr)->orderBy('view_count', 'desc')->get();
         
-        $popTags = $this->tag->orderBy('view_count', 'asc')->take(20)->get();
+        $popTags = $this->tag->orderBy('view_count', 'desc')->take(20)->get();
         
 //        $tagIds = TagRelation::where('item_id', 1)->get()->map(function($obj){
 //            return $obj->tag_id;

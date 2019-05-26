@@ -51,7 +51,7 @@ class LoginController extends Controller
             'password' => 'required|min:8', 
         ];
         
-         $messages = [
+        $messages = [
             //'title.required' => '「商品名」を入力して下さい。',
         ];
         
@@ -80,6 +80,8 @@ class LoginController extends Controller
 //        if(isset($_POST['to_cart'])) {
 //             return '/shop/cart'; 
 //          }
+		
+        return '/';
     }
     
 }

@@ -8,6 +8,7 @@ use App\User;
 use App\UserImg;
 use App\Favorite;
 use App\Good;
+use App\UserComment;
 
 use App\ItemUpper;
 use App\ItemUpperRelation;
@@ -22,7 +23,7 @@ use Cookie;
 
 class SingleController extends Controller
 {
-    public function __construct(Tag $tag, TagRelation $tagRel, UserImg $userImg, User $user, Favorite $favorite, Good $good)
+    public function __construct(Tag $tag, TagRelation $tagRel, UserImg $userImg, User $user, Favorite $favorite, Good $good, UserComment $userCom)
     {
         //$this->middleware('search');
         
@@ -33,6 +34,7 @@ class SingleController extends Controller
         
         $this->favorite = $favorite;
         $this->good = $good;
+        $this->userCom = $userCom;
         
 //        $this->tag = $tag;
 //        $this->tagRelation = $tagRelation;
@@ -121,6 +123,10 @@ class SingleController extends Controller
         	
             if(isset($good)) $isGood = 1;   
         }
+        
+        
+        //Comment
+        $userComs = $this->userCom->where('img_id', $id)->orderBy('created_at', 'asc')->get();
         
         
         
@@ -319,18 +325,21 @@ class SingleController extends Controller
         $metaKeyword = $userImg->meta_keyword;
         
         
-        return view('main.home.single', ['userImg'=>$userImg, 'user'=>$user, 'tags'=>$tags, 'isFav'=>$isFav, 'isGood'=>$isGood, 'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'type'=>'single']);
+        return view('main.home.single', ['userImg'=>$userImg, 'user'=>$user, 'tags'=>$tags, 'isFav'=>$isFav, 'isGood'=>$isGood, 'userComs'=>$userComs, 'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'type'=>'single']);
     }
     
     
-    public function postForm(Request $request)
+    public function postComment(Request $request)
     {
     	$data = $request->all();
-     
-     	$buyItem = $this->item->find($data['item_id']);
+     	
+        $data['user_id'] = Auth::id();
+        
+     	$this->userCom->create($data);
+     	
       
-         
-        return view('main.cart.index', ['data'=>$data ]);
+        return redirect('post/' . $data['img_id']);
+        //return view('main.cart.index', ['data'=>$data ]);
     }
     
     

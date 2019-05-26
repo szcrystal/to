@@ -47,6 +47,8 @@ Route::get('tag/{slug}', 'Main\HomeController@tagIndex');
 
 //Single
 Route::get('post/{id}', 'Main\SingleController@index');
+
+Route::post('post/comment', 'Main\SingleController@postComment');
 Route::post('post/favgood-script', 'Main\SingleController@postFavGoodScript');
 
 

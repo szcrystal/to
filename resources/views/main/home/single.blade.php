@@ -83,11 +83,6 @@ use App\Good;
             
             	<?php //END ================================================================= ?>    
 
-
-				<div class="border border-primary my-3">
-                	{{ $userImg->explain }}
-                </div>
-
 				<div class="mt-3">
                 	<?php
                         $favCount = Favorite::where('img_id', $userImg->id)->get()->count();
@@ -96,6 +91,78 @@ use App\Good;
                     
                     <span class="mr-2"><i class="fas fa-heart"></i> {{ $favCount }}</span>
                     <span><i class="fas fa-thumbs-up"></i> {{ $goodCount }}</span>
+                </div>
+
+
+				<div class="border border-primary my-3">
+                	{{ $userImg->explain }}
+                </div>
+
+				
+                <div class="com-wrap">
+                	
+                    <div class="clearfix">
+                        @foreach($userComs as $userCom)
+                            
+                            <?php $u = $userCom->main_user ? $user : User::find($userCom->user_id); ?>
+                                
+                            <div class="float-left col-md-3">
+                                <span class="icon-wrap">
+                                    <img src="{{ Storage::url($u->icon_img_path) }}" class="img-fluid">
+                                </span>
+                            </div>
+                            
+                            
+                            <div class="border border-secondary p-2 mb-3 col-md-9 float-left">
+                                <span class="mr-2"><a href="{{ url('user/'. $userCom->user_id) }}">{{ $u->name }}</a></span>
+                                <small>{{ $userCom->created_at }}</small>
+                                
+                                <p>
+                                    @if(! $userCom->main_user)
+                                        <span><a href="{{ url('user/'. $user->id) }}">＠{{ $user->name }}</a>さん</span><br>
+                                    @endif
+                                    
+                                    {{ $userCom->comment }}
+                                </p>
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    <div>
+                    @if(Auth::check())
+                        <form class="form-horizontal" role="form" method="POST" action="{{ url('post/comment') }}">
+                            {{ csrf_field() }}
+                            
+                            
+                            <input type="hidden" name="img_id" value="{{ $userImg->id }}">
+                            <input type="hidden" name="uri" value="{{ Request::path() }}">
+                            
+                            <input type="hidden" name="main_user" value="{{ $user->id == Auth::id() ? 1 : 0 }}">
+                            
+                            
+                            <fieldset>
+                                <label>{{ $user->name }}さんへコメント</label>
+                                
+                                <textarea class="form-control {{ $errors->has('comment') ? ' is-invalid' : '' }}" name="comment" rows="8">{{ Ctm::isOld() ? old('comment') : (isset($userImg) ? '' : '') }}</textarea>
+
+                                @if ($errors->has('comment'))
+                                    <div class="text-danger">
+                                        <span class="fa fa-exclamation form-control-feedback"></span>
+                                        <span>{{ $errors->first('comment') }}</span>
+                                    </div>
+                                @endif
+                            </fieldset>
+                                
+                         
+                            <button type="submit" class="btn btn-custom text-small text-center w-100 mt-3">コメントする</button>
+                        </form>
+                    @else
+                    	<span>コメントするには<a href="{{ url('login') }}">ログイン</a>が必要です。<br>
+                        <a href="{{ url('login') }}">ログインする <i class="fal fa-angle-double-right"></i></a></span>
+                    @endif
+                    
+                    </div>
+                    
                 </div>
 
 			</div><!-- left -->
@@ -189,7 +256,7 @@ use App\Good;
 
 			<?php //================================================================= ?> 
                 <div class="single-recom">
-
+					
 					   
 
             	</div><!-- single-recom -->
