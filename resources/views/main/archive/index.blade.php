@@ -36,9 +36,9 @@
     
     <div class="panel-heading">
         <h2 class="mb-3 card-header">
-        @if($type == 'category')
-            {{ $cate->name }}
-            <?php $orgObj = $cate; ?>
+        @if($type == 'cate')
+            メインタグ：{{ $cate->name }}
+            <?php $objs = $userImgs; ?>
             
         @elseif($type == 'subcategory')
             <small class="d-block pb-2">{{ $cate->name }}</small>{{ $subcate->name }}

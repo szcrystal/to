@@ -42,6 +42,9 @@ Route::resource('dashboard/categories', 'DashBoard\CategoryController');
 //Search
 Route::get('search', 'Main\SearchController@index');
 
+//MainTag
+Route::get('main-tag/{slug}', 'Main\HomeController@mainTagIndex');
+
 //Tag
 Route::get('tag/{slug}', 'Main\HomeController@tagIndex');
 
@@ -51,7 +54,8 @@ Route::get('post/{id}', 'Main\SingleController@index');
 Route::post('post/comment', 'Main\SingleController@postComment');
 Route::post('post/favgood-script', 'Main\SingleController@postFavGoodScript');
 
-
+//Profile
+Route::get('profile/{id}', 'MyPage\MyPageController@profile');
 
 //MyPage
 Route::get('/mypage', 'MyPage\MyPageController@index');

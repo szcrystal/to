@@ -5,6 +5,7 @@ use App\User;
 use App\Setting;
 use App\Favorite;
 use App\Good;
+use App\Category;
 ?>
 
 
@@ -95,7 +96,39 @@ use App\Good;
 
 
 				<div class="border border-primary my-3">
-                	{{ $userImg->explain }}
+                	{!! nl2br($userImg->explain) !!}
+                    
+                    @if($user->id != Auth::id())
+                    <div class="reply-btn text-right">
+                        <a href="#">返信</a>
+                    </div>
+                    
+                    <div>
+                        <form class="form-horizontal" role="form" method="POST" action="{{ url('post/comment') }}">
+                            {{ csrf_field() }}
+                            
+                            <input type="hidden" name="img_id" value="{{ $userImg->id }}">                                            
+                            <input type="hidden" name="main_user" value="{{ $user->id == Auth::id() ? 1 : 0 }}">
+                            <input type="hidden" name="rep_user_id" value="{{ $user->id }}">
+                            
+                            <fieldset>
+                                <span>＠{{ $user->name }}さん</span>
+                                <textarea class="form-control {{ $errors->has('comment') ? ' is-invalid' : '' }}" name="comment" rows="8">{{ Ctm::isOld() ? old('comment') : '' }}</textarea>
+
+                                @if ($errors->has('comment'))
+                                    <div class="text-danger">
+                                        <span class="fa fa-exclamation form-control-feedback"></span>
+                                        <span>{{ $errors->first('comment') }}</span>
+                                    </div>
+                                @endif
+                            </fieldset>
+                                
+                         
+                            <button type="submit" class="btn btn-custom text-small text-center w-100 mt-3" name="to_reply" value="1">返信する</button>
+                        </form>
+                    </div>
+                    @endif
+                    
                 </div>
 
 				
@@ -117,13 +150,51 @@ use App\Good;
                                 <span class="mr-2"><a href="{{ url('user/'. $userCom->user_id) }}">{{ $u->name }}</a></span>
                                 <small>{{ $userCom->created_at }}</small>
                                 
-                                <p>
-                                    @if(! $userCom->main_user)
-                                        <span><a href="{{ url('user/'. $user->id) }}">＠{{ $user->name }}</a>さん</span><br>
+                                <p class="mt-2">
+                                    {{-- <span><a href="{{ url('user/'. $user->id) }}">＠{{ $user->name }}</a>さん</span><br> --}}
+                                    
+                                    @if($userCom->rep_user_id)
+                                    	<a href="" class="text-small">＠{{ User::find($userCom->rep_user_id)->name }} さん</a><br>
                                     @endif
                                     
-                                    {{ $userCom->comment }}
+                                    {!! nl2br($userCom->comment) !!}
                                 </p>
+                                
+                                
+                                @if(Auth::check() && $userCom->user_id != Auth::id())
+                                    <div class="reply-btn text-right">
+                                        <a href="#">返信</a>
+                                    </div>
+                                    
+                                    <div>
+                                        <form class="form-horizontal" role="form" method="POST" action="{{ url('post/comment') }}">
+                                            {{ csrf_field() }}
+                                            
+                                            <input type="hidden" name="img_id" value="{{ $userImg->id }}">                                            
+                                            <input type="hidden" name="main_user" value="{{ $user->id == Auth::id() ? 1 : 0 }}">
+                                            <input type="hidden" name="rep_user_id" value="{{ $u->id }}">
+                                            
+                                            <fieldset>
+                                                <span>＠{{ $u->name }}さん</span>
+                                                <textarea class="form-control {{ $errors->has('comment') ? ' is-invalid' : '' }}" name="comment" rows="8">{{ Ctm::isOld() ? old('comment') : '' }}</textarea>
+
+                                                @if ($errors->has('comment'))
+                                                    <div class="text-danger">
+                                                        <span class="fa fa-exclamation form-control-feedback"></span>
+                                                        <span>{{ $errors->first('comment') }}</span>
+                                                    </div>
+                                                @endif
+                                            </fieldset>
+                                                
+                                         
+                                            <button type="submit" class="btn btn-custom text-small text-center w-100 mt-3" name="to_reply" value="1">返信する</button>
+                                        </form>
+                                    
+                                    </div>
+                                @endif
+                                
+                                
+                                
                             </div>
                         @endforeach
                     </div>
@@ -141,7 +212,7 @@ use App\Good;
                             
                             
                             <fieldset>
-                                <label>{{ $user->name }}さんへコメント</label>
+                                <label></label>
                                 
                                 <textarea class="form-control {{ $errors->has('comment') ? ' is-invalid' : '' }}" name="comment" rows="8">{{ Ctm::isOld() ? old('comment') : (isset($userImg) ? '' : '') }}</textarea>
 
@@ -154,7 +225,7 @@ use App\Good;
                             </fieldset>
                                 
                          
-                            <button type="submit" class="btn btn-custom text-small text-center w-100 mt-3">コメントする</button>
+                            <button type="submit" class="btn btn-custom text-small text-center w-100 mt-3" name="to_com" value="1">コメントする</button>
                         </form>
                     @else
                     	<span>コメントするには<a href="{{ url('login') }}">ログイン</a>が必要です。<br>
@@ -179,9 +250,8 @@ use App\Good;
                     	<img src="{{ Storage::url($user->icon_img_path) }}" class="img-fluid">
                     </span>
                     
-                    {{ $user->name }}
+                    <a href="{{ url('profile/'. $user->id) }}">{{ $user->name }}</a>
                 
-                	<h2 class="single-title">{{ $userImg -> explain }}<br><span></span></h2>
                  	
                     <div class="prof">
                     	<h3>プロフィール</h3>
@@ -242,7 +312,13 @@ use App\Good;
                 </div>
                 
                 
-
+				<div>
+                	<label>メインタグ</label><br>
+                    <?php $cate = Category::find($userImg->cate_id); ?>
+                    
+                	<a href="{{ url('main-tag/'. $cate->slug) }}">{{ $cate->name }}</a>
+                    
+                </div>
                 
                 
                     

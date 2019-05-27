@@ -60,7 +60,8 @@ button {
 ## Links
 --------------------------------------------------------------*/
 a {
-	color: #313131;
+/*	color: #313131;*/
+	color: blue;
 	text-decoration: none;
 	-webkit-transition: none !important;
     transition: none !important;

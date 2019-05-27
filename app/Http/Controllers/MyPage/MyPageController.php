@@ -619,6 +619,16 @@ class MyPageController extends Controller
         return view('mypage.favorite', ['user'=>$user, 'items'=>$items, 'cates'=>$cates, ]);   
     }
     
+    
+    public function profile($userId)
+    {
+    	echo $userId;
+        exit;
+        
+        
+        return view('mypage.profile', []);
+    }
+    
     public function create()
     {
         //

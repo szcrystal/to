@@ -10,6 +10,7 @@ class UserComment extends Model
         'img_id',
         'user_id',
         'main_user',
+        'rep_user_id',
         'comment',
     ];
 }

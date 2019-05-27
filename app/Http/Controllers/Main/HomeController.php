@@ -6,6 +6,7 @@ use App\Setting;
 use App\UserImg;
 use App\Tag;
 use App\TagRelation;
+use App\Category;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,7 +15,7 @@ use Ctm;
 
 class HomeController extends Controller
 {
-    public function __construct(Setting $setting, UserImg $userImg, Tag $tag, TagRelation $tagRel/*Item $item, Category $category, CategorySecond $cateSec, Tag $tag, TagRelation $tagRel, Fix $fix, Setting $setting, ItemImage $itemImg, Favorite $favorite, ItemStockChange $itemSc, TopSetting $topSet, DeliveryGroup $dg, DeliveryGroupRelation $dgRel, Auth $auth*/)
+    public function __construct(Setting $setting, UserImg $userImg, Tag $tag, TagRelation $tagRel, Category $cate/*Item $item, Category $category, CategorySecond $cateSec, Tag $tag, TagRelation $tagRel, Fix $fix, Setting $setting, ItemImage $itemImg, Favorite $favorite, ItemStockChange $itemSc, TopSetting $topSet, DeliveryGroup $dg, DeliveryGroupRelation $dgRel, Auth $auth*/)
     {
         //$this->middleware('search');
         
@@ -31,6 +32,8 @@ class HomeController extends Controller
         $this->userImg = $userImg;
         $this->tag = $tag;
         $this->tagRel = $tagRel;
+        $this->cate = $cate;
+        
 //        $this->itemImg = $itemImg;
 //        $this->favorite = $favorite;
 //        $this->itemSc = $itemSc;
@@ -199,6 +202,47 @@ class HomeController extends Controller
         return view('main.home.index', ['userImgs'=>$userImgs, 'popTags'=>$popTags,'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'isTop'=>$isTop,]);
     }
 
+	
+    public function mainTagIndex($slug)
+    {
+    	$cate = $this->cate->where('slug', $slug)/*->where($this->whereArr)*/->first();
+        
+        if(!isset($cate)) {
+            abort(404);
+        }
+    	
+        
+        $userImgs = $this->userImg->where('cate_id', $cate->id)->where($this->whereArr)->orderBy('created_at', 'desc')->paginate($this->perPage);
+        
+        //$strs = implode(',', $tagIds);
+        //$placeholder = '';
+        
+//        foreach ($tagIds as $key => $value) {
+//           $placeholder .= ($key == 0) ? $value : ','.$value;
+//        }
+//        exit;
+//        
+//        $strs = "FIELD(id, $strs)";
+//        echo $strs;
+//        exit;
+        
+        //->orderByRaw("FIELD(id, $sortIDs)"
+//        $tags = Tag::whereIn('id', $tagIds)->orderByRaw("FIELD(id, $placeholder)")->take(2)->get();
+//        print_r($tags);
+//        exit;
+
+		$metaTitle = '';
+        $metaDesc = '';
+        $metaKeyword = '';
+        
+        $type = 'cate';
+        
+        $cate->timestamps = false;
+        $cate->increment('view_count');
+
+		return view('main.archive.index', ['userImgs'=>$userImgs, 'cate'=>$cate, 'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'type'=>$type]);
+    }
+    
     
     public function tagIndex($slug)
     {

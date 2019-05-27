@@ -18,6 +18,7 @@ class CreateUserCommentsTable extends Migration
             $table->integer('img_id')->nullable()->default(NULL);
             $table->integer('user_id')->nullable()->default(NULL);
             $table->boolean('main_user')->nullable()->default(NULL);
+            $table->integer('rep_user_id')->nullable()->default(NULL);
             $table->text('comment')->nullable()->default(NULL);
 
             $table->timestamps();
