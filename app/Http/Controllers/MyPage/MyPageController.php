@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\MyPage;
 
 use App\User;
+use App\UserImg;
+use App\UserFollow;
+use App\Favorite;
 
 
 use Illuminate\Http\Request;
@@ -19,7 +22,7 @@ use Illuminate\Validation\Rule;
 
 class MyPageController extends Controller
 {
-    public function __construct(User $user)
+    public function __construct(User $user, UserImg $userImg, UserFollow $follow, Favorite $favorite)
     {
         
         $this -> middleware('auth', ['except'=>['getRegister', 'postRegister', 'registerEnd']]);
@@ -27,6 +30,9 @@ class MyPageController extends Controller
         
         
         $this->user = $user;
+        $this->userImg = $userImg;
+        $this->follow = $follow;
+        $this->favorite = $favorite;
 //        $this->userNor = $userNor;
 //        $this->sale = $sale;
 //        $this->saleRel = $saleRel;
@@ -37,7 +43,9 @@ class MyPageController extends Controller
 //    	$this-> receiver = $receiver;
 //        
 //        $this->gmoId = Ctm::gmoId();
-                
+        
+        $this->whereArr = ['open_status'=>1];
+        
         $this->perPage = 20;
         
     }
@@ -596,27 +604,50 @@ class MyPageController extends Controller
     {
     	$user = $this->user->find(Auth::id());
      	
-        $itemIds = $this->favorite->where(['user_id'=>$user->id])->get()->map(function($obj){
-         	return $obj->item_id;
+        $imgIds = $this->favorite->where(['user_id'=>$user->id])->get()->map(function($obj){
+         	return $obj->img_id;
         })->all();
       
-      	$items = $this->item->whereIn('id', $itemIds)->orderBy('id', 'desc')->paginate($this->perPage); 
+      	$imgs = $this->userImg->whereIn('id', $imgIds)->where($this->whereArr)->orderBy('id', 'desc')->paginate($this->perPage); 
        
-       	foreach($items as $item) {
-        	$fav = $this->favorite->where(['user_id'=>$user->id, 'item_id'=>$item->id])->first();
-            
-         	if($fav->sale_id) {
-          		$item->saleDate = $this->sale->find($fav->sale_id)->created_at;
-          	}
-            else {
-            	$item->saleDate = 0;
-            }       
-        	//$item->saled = 1;
-        }      
-       
-       	$cates = $this->category;   
+//       	foreach($imgs as $img) {
+//        	$fav = $this->favorite->where(['user_id'=>$user->id, 'item_id'=>$item->id])->first();
+//            
+//         	if($fav->sale_id) {
+//          		$item->saleDate = $this->sale->find($fav->sale_id)->created_at;
+//          	}
+//            else {
+//            	$item->saleDate = 0;
+//            }       
+//        	//$item->saled = 1;
+//        }      
+//       
+//       	$cates = $this->category;   
       
-        return view('mypage.favorite', ['user'=>$user, 'items'=>$items, 'cates'=>$cates, ]);   
+        return view('mypage.favorite', ['user'=>$user, 'imgs'=>$imgs,/* 'cates'=>$cates,*/ ]);   
+    }
+    
+    public function follow()
+    {
+    	$user = $this->user->find(Auth::id());
+     	
+        $follows = $this->follow->where(['user_id'=>$user->id])->paginate($this->perPage);
+             
+//       	foreach($items as $item) {
+//        	$fav = $this->favorite->where(['user_id'=>$user->id, 'item_id'=>$item->id])->first();
+//            
+//         	if($fav->sale_id) {
+//          		$item->saleDate = $this->sale->find($fav->sale_id)->created_at;
+//          	}
+//            else {
+//            	$item->saleDate = 0;
+//            }       
+//        	//$item->saled = 1;
+//        }      
+//       
+//       	$cates = $this->category;   
+      
+        return view('mypage.follow', ['user'=>$user, 'follows'=>$follows ]);   
     }
     
     

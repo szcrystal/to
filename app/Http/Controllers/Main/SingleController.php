@@ -9,6 +9,7 @@ use App\UserImg;
 use App\Favorite;
 use App\Good;
 use App\UserComment;
+use App\UserFollow;
 
 use App\ItemUpper;
 use App\ItemUpperRelation;
@@ -23,7 +24,7 @@ use Cookie;
 
 class SingleController extends Controller
 {
-    public function __construct(Tag $tag, TagRelation $tagRel, UserImg $userImg, User $user, Favorite $favorite, Good $good, UserComment $userCom)
+    public function __construct(Tag $tag, TagRelation $tagRel, UserImg $userImg, User $user, Favorite $favorite, Good $good, UserComment $userCom, UserFollow $follow)
     {
         //$this->middleware('search');
         
@@ -35,6 +36,7 @@ class SingleController extends Controller
         $this->favorite = $favorite;
         $this->good = $good;
         $this->userCom = $userCom;
+        $this->follow = $follow;
         
 //        $this->tag = $tag;
 //        $this->tagRelation = $tagRelation;
@@ -108,6 +110,14 @@ class SingleController extends Controller
         //セカンド画像
         $imgsSec = $this->itemImg->where(['item_id'=>$id, 'type'=>2])->orderBy('number', 'asc')->get();
 */        
+        
+        //Follow確認
+        $isFol = 0;
+        if(Auth::check()) {
+	        $fav = $this->follow->where(['user_id'=>Auth::id(), 'target_user_id'=>$user->id])->first();
+        	
+            if(isset($fav)) $isFol = 1;   
+        }
         
         //お気に入り確認
         $isFav = 0;
@@ -325,7 +335,7 @@ class SingleController extends Controller
         $metaKeyword = $userImg->meta_keyword;
         
         
-        return view('main.home.single', ['userImg'=>$userImg, 'user'=>$user, 'tags'=>$tags, 'isFav'=>$isFav, 'isGood'=>$isGood, 'userComs'=>$userComs, 'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'type'=>'single']);
+        return view('main.home.single', ['userImg'=>$userImg, 'user'=>$user, 'tags'=>$tags, 'isFol'=>$isFol, 'isFav'=>$isFav, 'isGood'=>$isGood, 'userComs'=>$userComs, 'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'type'=>'single']);
     }
     
     
@@ -366,8 +376,10 @@ class SingleController extends Controller
     //お気に入り ajax
     public function postFavGoodScript(Request $request)
     {
-        $imgId = $request->input('imgId');
+        $targetId = $request->input('targetId');
         $type = $request->input('type');
+        
+        $isFollow = 0;
         
         $isOn = $request->input('isOn');
         
@@ -375,7 +387,12 @@ class SingleController extends Controller
         $userId = Auth::id();
         $str = '';
         
-        if($type == 'favorite') {
+        if($type == 'follow') {
+        	$model = $this->follow;
+            $typeStr = 'フォロー';
+            $isFollow = 1;
+        }
+        else if($type == 'favorite') {
         	$model = $this->favorite;
             $typeStr = 'お気に入り';
         }
@@ -388,27 +405,49 @@ class SingleController extends Controller
         //foreach($data['spare_count'] as $count) {
                         
             if(!$isOn) { //お気に入り解除の時
-                $favModel = $model->where(['user_id'=>$userId, 'img_id'=>$imgId])->first();
+				
+                if($isFollow) {
+                	$favModel = $model->where(['user_id'=>$userId, 'target_user_id'=>$targetId])->first();
+                    $str = $typeStr . "を解除しました";
+                }
+                else {
+                	$favModel = $model->where(['user_id'=>$userId, 'img_id'=>$targetId])->first();
+                    $str = $typeStr . "から削除されました";
+                }
                 
                 if($favModel !== null) {
                     $favModel ->delete();
                 }
                 
-                $str = $typeStr . "から削除されました";
+                
             }
             else {
+                if($isFollow) {
+                	$favModel = $model->updateOrCreate(
+                        ['user_id'=>$userId, 'target_user_id'=>$targetId],
+                        [
+                            'user_id'=>$userId,
+                            'target_user_id'=>$targetId,
+                        ]
+                    );
                     
-                $favModel = $model->updateOrCreate(
-                    ['user_id'=>$userId, 'img_id'=>$imgId],
-                    [
-                        'user_id'=>$userId,
-                        'img_id'=>$imgId,
-//                            'type' => 1,
-//                            'number'=> $count+1,
-                    ]
-                );
+                    $str = $typeStr . "しました";
+                }
+                else {
+                    $favModel = $model->updateOrCreate(
+                        ['user_id'=>$userId, 'img_id'=>$targetId],
+                        [
+                            'user_id'=>$userId,
+                            'img_id'=>$targetId,
+    //                            'type' => 1,
+    //                            'number'=> $count+1,
+                        ]
+                    );
+                    
+                    $str = $typeStr . "に登録されました";
+                }
 				
-    			$str = $typeStr . "に登録されました";       
+    			       
             }
             
         //} //foreach

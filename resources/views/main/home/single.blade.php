@@ -246,12 +246,41 @@ use App\Category;
             	
                 <?php //================================================================= ?>
                 
-                	<span class="icon-wrap">
-                    	<img src="{{ Storage::url($user->icon_img_path) }}" class="img-fluid">
-                    </span>
+                	<div class="py-4">
+                        <span class="icon-wrap">
+                            <img src="{{ Storage::url($user->icon_img_path) }}" class="img-fluid">
+                        </span>
+                        
+                        <a href="{{ url('profile/'. $user->id) }}">{{ $user->name }}</a>
+                	</div>
                     
-                    <a href="{{ url('profile/'. $user->id) }}">{{ $user->name }}</a>
-                
+                    <div class="favorite mb-3">
+                        
+                        @if(Auth::check())
+                            <?php
+                                if($isFol) {
+                                    $on = ' d-none';
+                                    $off = ' d-inline'; 
+                                    $str = 'フォローしています';              
+                                }
+                                else {
+                                    $on = ' d-inline';
+                                    $off = ' d-none';
+                                    $str = 'このユーザーをフォローする';
+                                }               
+                            ?>
+
+                            <span class="fav fav-on{{ $on }}" data-id="{{ $user->id }}" data-type="follow"><i class="fal fa-user-plus"></i></span>
+                            <span class="fav fav-off{{ $off }}" data-id="{{ $user->id }}" data-type="follow"><i class="fal fa-user-check"></i></span>
+                            
+                            <small class="fav-str"><span class="loader"><i class="fas fa-square"></i></span>{{ $str }}</small> 
+                            
+                        @else
+                            <span class="fav-temp"><i class="far fa-heart"></i></span>
+                            <small class="fav-str"><a href="{{ url('login') }}"><b>ログイン</b></a>するとフォローできます</small>   
+                        @endif
+   
+                    </div>
                  	
                     <div class="prof">
                     	<h3>プロフィール</h3>
@@ -262,7 +291,7 @@ use App\Category;
                 <div class="favorite my-4" data-type='single'>
                     @if(Auth::check())
                         <?php
-                            if($isFav) {
+                            if($isGood) {
                                 $on = ' d-none';
                                 $off = ' d-inline'; 
                                 $str = 'いいね済み';              

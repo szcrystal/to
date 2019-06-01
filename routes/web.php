@@ -70,6 +70,7 @@ Route::post('/mypage/register', 'MyPage\MyPageController@postRegister');
 Route::post('/mypage/register/end', 'MyPage\MyPageController@registerEnd');
 
 Route::get('/mypage/favorite', 'MyPage\MyPageController@favorite');
+Route::get('/mypage/follow', 'MyPage\MyPageController@follow');
 
 Route::get('/mypage/optout', 'MyPage\MyPageController@getOptout');
 Route::post('/mypage/optout', 'MyPage\MyPageController@postOptout');

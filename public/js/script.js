@@ -650,8 +650,9 @@ var exe = (function() {
                 var $th = $(this);
                 var $loader = $('.favorite .loader');
                 
-                var _imgId = $(this).data('id');
+                var _targetId = $(this).data('id');
                 var _type = $(this).data('type');
+                
                 var _tokenVal = $('input[name=_token]').val();
                 var _isOn = 0;
                 
@@ -678,7 +679,7 @@ var exe = (function() {
                         cache: false,
                         data: {
                             _token: _tokenVal,
-                            imgId: _imgId,
+                            targetId: _targetId,
                             type: _type,
                             isOn: _isOn,
                         },

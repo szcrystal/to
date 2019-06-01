@@ -38,6 +38,16 @@
         	<a href="{{ url('mypage/favorite') }}" class="d-inline-block text-big"><i class="fal fa-heart"></i> お気に入り</a>
             <p>お気に入りに追加した商品を確認できます。</p>
         </li>
+        
+        <li class="mb-5">
+        	<a href="{{ url('mypage/follow') }}" class="d-inline-block text-big"><i class="fal fa-user-check"></i> フォロー中ユーザー</a>
+            <p>フォロー中のユーザーを確認できます。</p>
+        </li>
+        
+        <li class="mb-5">
+        	<a href="{{ url('mypage/follow') }}" class="d-inline-block text-big"><i class="fal fa-user-check"></i> いいねされている投稿</a>
+            <p>いいねされている投稿を確認。</p>
+        </li>
     	
         <li class="mb-5">
      	   <a href="{{ url('mypage/register') }}" class="d-inline-block text-big"><i class="fal fa-edit"></i> 会員登録情報の変更</a>

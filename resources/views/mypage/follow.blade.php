@@ -3,8 +3,9 @@
 @section('content')
 
 <?php
-use App\Item;
+use App\User;
 use App\Favorite;
+use App\UserImg;
 ?>
 
 <div id="main" class="mp-favorite">
@@ -13,9 +14,9 @@ use App\Favorite;
 
         <div class="panel-body">
 
-<h3 class="mb-3 card-header">お気に入り一覧</h3>
-@if(! count($imgs) > 0)
-<p style="min-height: 350px;">まだお気に入りの投稿がありません。</p>
+<h3 class="mb-3 card-header">フォローしているユーザー</h3>
+@if(! count($follows) > 0)
+<p style="min-height: 350px;">フォロー中のユーザーがいません。</p>
 
 @else
 <div class="table-responsive table-cart">
@@ -25,47 +26,53 @@ use App\Favorite;
         <thead>
         <tr>
         	<th>登録日</th>
-         	<th style="width: 20%;">商品名</th>
-          	<th></th>
+         	<th style="width: 40%;">ユーザー名</th>
+          	<th>投稿数</th>
            	<th></th>
 			<th></th>
         </tr>
         </thead>
         
         <tbody>
-            @foreach($imgs as $img)
+            @foreach($follows as $follow)
             <tr>
-            	<?php $fav = Favorite::where(['user_id'=>$user->id, 'img_id'=>$img->id])->first(); ?>
+            	<?php $targetUser = User::find($follow->target_user_id); ?>
                 
-                <td><i class="fas fa-heart text-enji"></i> {{ Ctm::changeDate($fav->created_at, 1) }}</td>
+                <td><i class="fas fa-heart text-enji"></i> {{ Ctm::changeDate($follow->created_at, 1) }}</td>
+                
                 <td class="clearfix">
                     
                     {{-- @include('main.shared.smallThumbnail') --}}
                     
-                    <img src="{{ Storage::url($img->img_path) }}" class="w-25 float-left">
-                    
                     <div class="w-75 float-left">
-                        <a href="{{ url('post/'.$img->id) }}"> 
-                            {{ $img->explain }}<br>
-                            
+                        <a href="{{ url('profile/'. $targetUser->id) }}"> 
+                            {{ $targetUser->name }}<br>
                        </a> 
                    </div>
                 </td>
                 
                 <td>
-                
+                	<?php
+                    	$userImgs = UserImg::where(['user_id'=>$targetUser->id, 'open_status'=>1])->get();
+                    ?>
+                	
+                    {{ $userImgs->count() }}
                 </td>
                 
                 <td>
+                    <?php $fours = $userImgs->take(4); ?>
                     
+                    @foreach($fours as $four)
+                    	<a href="{{ url('post/' . $four->id) }}">
+                    	<img src="{{ Storage::url($four->img_path) }}" class="img-fluid w-25">
+                        </a>
+                    @endforeach
                 </td>
-                
                 <td>
                     <a href="" class="btn border-secondary bg-white text-small w-100 rounded-0">
                     	商品ページへ <i class="fal fa-angle-double-right"></i>
                     </a>
 
-                     
                  </td>
             </tr>
             @endforeach
@@ -140,7 +147,7 @@ use App\Favorite;
 </div>
 
 <div>
-	{{ $imgs->links() }}
+	{{ $follows->links() }}
 </div>
 @endif
 
