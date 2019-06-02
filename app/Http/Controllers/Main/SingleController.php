@@ -11,16 +11,19 @@ use App\Good;
 use App\UserComment;
 use App\UserFollow;
 
-use App\ItemUpper;
-use App\ItemUpperRelation;
+
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 
+use App\Mail\ActionMail;
+use App\Mail\UserFollowMail;
+
 use Auth;
 use Ctm;
 use Cookie;
+use Mail;
 
 class SingleController extends Controller
 {
@@ -59,6 +62,10 @@ class SingleController extends Controller
         $user = $this->user->find($userImg->user_id);
         
         $whereArr = $this->whereArr;
+        
+        //Mail::to($user)->queue(new UserFollowMail(4, 4, 'フォローされました'));
+        //Mail::to($u->email, $u->name)->queue(new ActionMail($targetId, $str));
+        
         
         if(!isset($userImg)) {
             abort(404);
@@ -423,7 +430,7 @@ class SingleController extends Controller
             }
             else {
                 if($isFollow) {
-                	$favModel = $model->updateOrCreate(
+                	$model->updateOrCreate(
                         ['user_id'=>$userId, 'target_user_id'=>$targetId],
                         [
                             'user_id'=>$userId,
@@ -432,6 +439,10 @@ class SingleController extends Controller
                     );
                     
                     $str = $typeStr . "しました";
+                    
+                    //Mail Send ===
+                    $u = $this->user->find($targetId);
+                    Mail::to($u)->queue(new UserFollowMail($targetId, $userId, 'フォローされました。'));
                 }
                 else {
                     $favModel = $model->updateOrCreate(
@@ -445,12 +456,21 @@ class SingleController extends Controller
                     );
                     
                     $str = $typeStr . "に登録されました";
+                    
+                    $userId = $this->userImg->find($targetId)->user_id;
+                    $u = $this->user->find($userId);
+                    
+                    //Mail Send ===
+                    //Mail::to($u->email, $u->name)->queue(new ActionMail($targetId, $userId, $str));
+                    //Mail::to('red.beryl@zoho.com', 'opal')->queue(new ActionMail(3, 4, 'お気に入りされました'));
                 }
 				
     			       
             }
             
-        //} //foreach
+
+		//Mail::to($userData['email'], $userData['name'])->queue(new ActionMail($saleRelId, 1));
+		//Mail::to($this->set->admin_email, $this->set->admin_name)->later(now()->addMinutes(3), new OrderEnd($saleRelId, 0))
         
 //        $num = 1;
 //        $spares = $this->itemImg->where(['item_id'=>$itemId, 'type'=>1])->get();
