@@ -463,7 +463,6 @@ class SingleController extends Controller
                     //Mail::to($u->email, $u->name)->queue(new ActionMail($targetId, $userId, $str));
                     //Mail::to('red.beryl@zoho.com', 'opal')->queue(new ActionMail(3, 4, 'お気に入りされました'));
                 }
-				
     			       
             }
             
