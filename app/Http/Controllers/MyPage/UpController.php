@@ -104,7 +104,7 @@ class UpController extends Controller
         
         //$icons = $this->icon->all();
         
-        return view('mypage.upform', ['userImg'=>$userImg, /*'cates'=>$cates, 'subcates'=>$subcates, 'consignors'=>$consignors, 'dgs'=>$dgs,*/'tagNames'=>$tagNames, 'allCates'=>$allCates, 'allTags'=>$allTags, 'spares'=>$spares, /*'snaps'=>$snaps, */'primaryCount'=>$primaryCount, 'editId'=>$imgId, 'edit'=>1]);
+        return view('mypage.upForm', ['userImg'=>$userImg, /*'cates'=>$cates, 'subcates'=>$subcates, 'consignors'=>$consignors, 'dgs'=>$dgs,*/'tagNames'=>$tagNames, 'allCates'=>$allCates, 'allTags'=>$allTags, 'spares'=>$spares, /*'snaps'=>$snaps, */'primaryCount'=>$primaryCount, 'editId'=>$imgId, 'edit'=>1]);
     }
     
     
