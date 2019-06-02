@@ -168,6 +168,7 @@
                 </fieldset>
                 
                 
+                
                 <fieldset class="mb-5 form-group">
                     <label for="pot_count" class="control-label">URL</label>
                     <input class="form-control col-md-6{{ $errors->has('target_url') ? ' is-invalid' : '' }}" name="target_url" value="{{ Ctm::isOld() ? old('target_url') : (isset($userImg) ? $userImg->target_url : '') }}">
@@ -258,7 +259,6 @@
 	
     </form>
 </div>
-
 
 
 
