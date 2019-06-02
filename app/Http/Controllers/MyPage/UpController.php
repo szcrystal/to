@@ -98,6 +98,8 @@ class UpController extends Controller
         
         $setting = $this->set;
         $primaryCount = 1;
+
+
         
 //        $primaryCount = $setting->snap_primary;
 //        $imgCount = $setting->snap_secondary;
