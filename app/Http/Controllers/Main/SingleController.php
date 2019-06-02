@@ -426,7 +426,6 @@ class SingleController extends Controller
                     $favModel ->delete();
                 }
                 
-                
             }
             else {
                 if($isFollow) {
