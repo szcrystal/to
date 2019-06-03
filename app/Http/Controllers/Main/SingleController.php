@@ -63,7 +63,7 @@ class SingleController extends Controller
         
         $whereArr = $this->whereArr;
         
-        Mail::to('red.beryl@zoho.com', 'opal')->queue(new UserFollowMail(2, 2, 'フォローされました'));
+        Mail::to('red.beryl@zoho.com', 'berylberyl')->queue(new UserFollowMail(2, 2, 'フォローされました'));
         //Mail::to($u->email, $u->name)->queue(new ActionMail($targetId, $str));
         
         
