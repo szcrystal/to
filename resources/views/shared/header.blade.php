@@ -6,14 +6,14 @@
     {{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
-    @if(Ctm::isEnv('alpha'))
+    {{-- @if(Ctm::isEnv('alpha')) --}}
     <meta name="robots" content="noindex, nofollow">
-    @endif
+    {{-- @endif --}}
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@if(isset($metaTitle)){{ $metaTitle }} | @endif{{ config('app.name', 'グリーンロケット') }}</title>
+    <title>@if(isset($metaTitle)){{ $metaTitle }} | @endif{{ config('app.name', 'tonaniwa') }}</title>
     
     @if(isset($metaDesc))
     <meta name="description" content="{{ str_replace(PHP_EOL, '', $metaDesc) }}">
