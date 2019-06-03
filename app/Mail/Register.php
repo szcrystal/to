@@ -43,7 +43,7 @@ class Register extends Mailable
         
         $user = User::find($this->userId);
         
-        return $this->from(env('ADMIN_EMAIL', 'no-reply@green-rocket.jp'), $this->setting->admin_name)
+        return $this->from('no-reply@tonaniwa.com', $this->setting->admin_name)
                     ->view('emails.register')
                     ->with([
 //                        'header' => $templ->header,

@@ -21,6 +21,7 @@ class User extends Authenticatable
         'icon_img_path',
         'profile',
         'password',
+        'active',
     ];
 
     /**

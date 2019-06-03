@@ -38,7 +38,7 @@ class CreateSettingsTable extends Migration
         
         
         DB::table('settings')->insert([
-                'admin_name' => 'GREEN ROCKET',
+                'admin_name' => 'TonaNiwa',
                 'admin_email' => 'bonjour@frank.fam.cx',
 
 				'is_product' => 0,

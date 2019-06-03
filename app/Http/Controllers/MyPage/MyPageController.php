@@ -251,6 +251,9 @@ class MyPageController extends Controller
 //        
 //        $data = $data['user'];
         
+        $data['active'] = 1;
+        //exit;
+        
         if($isMypage) {
      		$uId = Auth::id();
             $user = $this->user->find($uId);
