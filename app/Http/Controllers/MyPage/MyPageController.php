@@ -650,18 +650,11 @@ class MyPageController extends Controller
 //       
 //       	$cates = $this->category;   
       
-        return view('mypage.follow', ['user'=>$user, 'follows'=>$follows ]);   
+        return view('mypage.follow', ['user'=>$user, 'follows'=>$follows, ]);   
     }
     
     
-    public function profile($userId)
-    {
-    	echo $userId;
-        exit;
-        
-        
-        return view('mypage.profile', []);
-    }
+    
     
     public function create()
     {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Main;
 
 use App\Setting;
+use App\User;
 use App\UserImg;
 use App\Tag;
 use App\TagRelation;
@@ -15,7 +16,7 @@ use Ctm;
 
 class HomeController extends Controller
 {
-    public function __construct(Setting $setting, UserImg $userImg, Tag $tag, TagRelation $tagRel, Category $cate/*Item $item, Category $category, CategorySecond $cateSec, Tag $tag, TagRelation $tagRel, Fix $fix, Setting $setting, ItemImage $itemImg, Favorite $favorite, ItemStockChange $itemSc, TopSetting $topSet, DeliveryGroup $dg, DeliveryGroupRelation $dgRel, Auth $auth*/)
+    public function __construct(Setting $setting, User $user, UserImg $userImg, Tag $tag, TagRelation $tagRel, Category $cate/*Item $item, Category $category, CategorySecond $cateSec, Tag $tag, TagRelation $tagRel, Fix $fix, Setting $setting, ItemImage $itemImg, Favorite $favorite, ItemStockChange $itemSc, TopSetting $topSet, DeliveryGroup $dg, DeliveryGroupRelation $dgRel, Auth $auth*/)
     {
         //$this->middleware('search');
         
@@ -29,6 +30,7 @@ class HomeController extends Controller
         $this->setting = $setting;
         $this->set = $this->setting->first();
         
+        $this->user = $user;
         $this->userImg = $userImg;
         $this->tag = $tag;
         $this->tagRel = $tagRel;
@@ -286,6 +288,11 @@ class HomeController extends Controller
 
 		return view('main.archive.index', ['userImgs'=>$userImgs, 'tag'=>$tag, 'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'type'=>$type]);
     }
+    
+    
+    
+        
+    
     
     public function create()
     {

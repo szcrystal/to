@@ -55,7 +55,7 @@ Route::post('post/comment', 'Main\SingleController@postComment');
 Route::post('post/favgood-script', 'Main\SingleController@postFavGoodScript');
 
 //Profile
-Route::get('profile/{id}', 'MyPage\MyPageController@profile');
+Route::get('profile/{id}', 'Main\SingleController@profile');
 
 //MyPage
 Route::get('/mypage', 'MyPage\MyPageController@index');

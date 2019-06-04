@@ -63,7 +63,7 @@ class SingleController extends Controller
         
         $whereArr = $this->whereArr;
         
-        Mail::to($user)->queue(new UserFollowMail(2, 2, 'フォローされました'));
+        //Mail::to($user)->queue(new UserFollowMail(2, 2, 'フォローされました'));
         //Mail::to($u->email, $u->name)->queue(new ActionMail($targetId, $str));
         
         
@@ -344,6 +344,40 @@ class SingleController extends Controller
         
         return view('main.home.single', ['userImg'=>$userImg, 'user'=>$user, 'tags'=>$tags, 'isFol'=>$isFol, 'isFav'=>$isFav, 'isGood'=>$isGood, 'userComs'=>$userComs, 'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'type'=>'single']);
     }
+    
+    
+    //ユーザープロファイル
+    public function profile($userId)
+    {
+    	$user = $this->user->find($userId);
+        $userImgs = $this->userImg->where(['user_id'=>$userId, 'open_status'=>1])->get();
+        
+        $numArr = array();
+        
+        $numArr['post'] = $userImgs->count();
+        
+        $numArr['follow'] = $this->follow->where('user_id', $userId)->get()->count();
+        $numArr['follower'] = $this->follow->where('target_user_id', $userId)->get()->count();
+        
+        //userImgのidを取得
+        $userImgIds = $userImgs->map(function($obj) {
+        	return $obj->id;
+        })->all();
+        
+        //使用タグ数
+        $numArr['tag'] = $this->tagRel->whereIn('img_id', $userImgIds)->get()->count();
+        
+        //いいねされている数
+        $numArr['good'] = $this->good->whereIn('img_id', $userImgIds)->get()->count();
+        
+        //お気に入りされている数
+        $numArr['favorite'] = $this->favorite->whereIn('img_id', $userImgIds)->get()->count();
+        
+        
+        
+        return view('mypage.profile', ['user'=>$user, 'userImgs'=>$userImgs, 'numArr'=>$numArr, ]);
+    }
+
     
     
     public function postComment(Request $request)
