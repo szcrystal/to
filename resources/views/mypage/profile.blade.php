@@ -22,15 +22,20 @@
 
 <h3 class="mb-3 card-header">{{ $user->name }} さんのプロフィール</h3>
 
-<div class="my-4 text-right">
-<a href="#">このユーザーからのコメントをブロックする</a>
+<div class="my-4 clearfix">
+<ul class="float-right">
+<li><a href="#">このユーザーからのコメントをブロックする</a><br>
+<li><a href="#">このユーザーについて報告する</a>
+</ul>
 </div>
 
 <div class="single-left">
 	<h4>最近の投稿</h4>
 	<div class="clearfix mb-3">
         @foreach($userImgs as $userImg)
+        	<a href="{{ url('post/' . $userImg->id) }}">
             <img src="{{ Storage::url($userImg->img_path) }}" class="img-fluid float-left w-25">
+            </a>
         @endforeach
     </div>
     

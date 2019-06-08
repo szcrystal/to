@@ -141,6 +141,9 @@ class SingleController extends Controller
             if(isset($good)) $isGood = 1;   
         }
         
+        //お気に入りのピックアップ
+        $goods = $this->good->where('img_id', $userImg->id)->orderBy('created_at', 'desc')->get();
+        
         
         //Comment
         $userComs = $this->userCom->where('img_id', $id)->orderBy('created_at', 'asc')->get();
@@ -342,7 +345,7 @@ class SingleController extends Controller
         $metaKeyword = $userImg->meta_keyword;
         
         
-        return view('main.home.single', ['userImg'=>$userImg, 'user'=>$user, 'tags'=>$tags, 'isFol'=>$isFol, 'isFav'=>$isFav, 'isGood'=>$isGood, 'userComs'=>$userComs, 'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'type'=>'single']);
+        return view('main.home.single', ['userImg'=>$userImg, 'user'=>$user, 'tags'=>$tags, 'isFol'=>$isFol, 'isFav'=>$isFav, 'isGood'=>$isGood, 'goods'=>$goods, 'userComs'=>$userComs, 'metaTitle'=>$metaTitle, 'metaDesc'=>$metaDesc, 'metaKeyword'=>$metaKeyword, 'type'=>'single']);
     }
     
     

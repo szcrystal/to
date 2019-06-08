@@ -891,28 +891,23 @@ var exe = (function() {
             });
             
             
-            //ネットバンク銀行選択
-//            if($('.payMethodRadio:checked').val() == 3) {
-//            	$wrapPmc.show();
-//            }
-//            
-//            $pmRadio.on('change', function(e){
-//            	if($(this).val() == 3) {
-//                	$wrapPmc.slideDown(100); 
-//                }
-//                else {
-//                	$wrapPmc.slideUp(100);
-//                }
-//            	
-//            });
-            
-            //console.log($pmRadio.find(':checked').val());
+
         },
         
         
         toggleSideMenu: function(){
-        	$tgl = $('.more-tgl');
-            speed = 150;
+            
+        	var $repTgl = $('.reply-tgl');
+            var speed = 100;
+            
+            $repTgl.on('click', function(e){            	
+                var $repForm = $(this).parent('div').next('.reply-form');
+                $repForm.slideToggle(speed);
+                
+            });
+            
+        	
+            $tgl = $('.more-tgl');
             
             $tgl.on('click', function(e){
             	$list = $(this).next('.more-list');
@@ -1099,6 +1094,8 @@ $(function(e){ //ready
     exe.autoComplete();
     exe.getWH();
     
+    exe.toggleSideMenu();
+    
     if(! exe.isSpTab('sp')) {
     	exe.scrollFunc();
     }
@@ -1125,7 +1122,7 @@ $(function(e){ //ready
     
     exe.slidePayMethodChild();
     
-    exe.toggleSideMenu();
+    
     
     exe.accordionMoveUp();
     exe.setSliderFrame();

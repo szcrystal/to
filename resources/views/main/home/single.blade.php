@@ -84,7 +84,7 @@ use App\Category;
             
             	<?php //END ================================================================= ?>    
 
-				<div class="mt-3">
+				<div class="mt-3 clearfix">
                 	<?php
                         $favCount = Favorite::where('img_id', $userImg->id)->get()->count();
                         $goodCount = Good::where('img_id', $userImg->id)->get()->count();
@@ -92,6 +92,8 @@ use App\Category;
                     
                     <span class="mr-2"><i class="fas fa-heart"></i> {{ $favCount }}</span>
                     <span><i class="fas fa-thumbs-up"></i> {{ $goodCount }}</span>
+                    
+                    <a href="#" class="float-right">シェアする</a>
                 </div>
 
 
@@ -100,10 +102,10 @@ use App\Category;
                     
                     @if($user->id != Auth::id())
                     <div class="reply-btn text-right">
-                        <a href="#">返信</a>
+                        <span class="reply-tgl py-1 px-2 border border-danger"><i class="fas fa-reply"></i> 返信</span>
                     </div>
                     
-                    <div>
+                    <div class="reply-form">
                         <form class="form-horizontal" role="form" method="POST" action="{{ url('post/comment') }}">
                             {{ csrf_field() }}
                             
@@ -112,7 +114,7 @@ use App\Category;
                             <input type="hidden" name="rep_user_id" value="{{ $user->id }}">
                             
                             <fieldset>
-                                <span>＠{{ $user->name }}さん</span>
+                                <span class="text-bold">＠{{ $user->name }}さん</span>
                                 <textarea class="form-control {{ $errors->has('comment') ? ' is-invalid' : '' }}" name="comment" rows="8">{{ Ctm::isOld() ? old('comment') : '' }}</textarea>
 
                                 @if ($errors->has('comment'))
@@ -147,14 +149,14 @@ use App\Category;
                             
                             
                             <div class="border border-secondary p-2 mb-3 col-md-9 float-left">
-                                <span class="mr-2"><a href="{{ url('user/'. $userCom->user_id) }}">{{ $u->name }}</a></span>
+                                <span class="mr-2"><a href="{{ url('profile/'. $userCom->user_id) }}">{{ $u->name }}</a></span>
                                 <small>{{ $userCom->created_at }}</small>
                                 
                                 <p class="mt-2">
                                     {{-- <span><a href="{{ url('user/'. $user->id) }}">＠{{ $user->name }}</a>さん</span><br> --}}
                                     
                                     @if($userCom->rep_user_id)
-                                    	<a href="" class="text-small">＠{{ User::find($userCom->rep_user_id)->name }} さん</a><br>
+                                    	<a href="{{ url('profile/' . $userCom->rep_user_id) }}" class="text-small">＠{{ User::find($userCom->rep_user_id)->name }} さん</a><br>
                                     @endif
                                     
                                     {!! nl2br($userCom->comment) !!}
@@ -163,10 +165,10 @@ use App\Category;
                                 
                                 @if(Auth::check() && $userCom->user_id != Auth::id())
                                     <div class="reply-btn text-right">
-                                        <a href="#">返信</a>
+                                        <span class="reply-tgl py-1 px-2 border border-danger"><i class="fas fa-reply"></i> 返信</span>
                                     </div>
                                     
-                                    <div>
+                                    <div class="reply-form">
                                         <form class="form-horizontal" role="form" method="POST" action="{{ url('post/comment') }}">
                                             {{ csrf_field() }}
                                             
@@ -175,7 +177,7 @@ use App\Category;
                                             <input type="hidden" name="rep_user_id" value="{{ $u->id }}">
                                             
                                             <fieldset>
-                                                <span>＠{{ $u->name }}さん</span>
+                                                <span class="text-bold">＠{{ $u->name }}さん</span>
                                                 <textarea class="form-control {{ $errors->has('comment') ? ' is-invalid' : '' }}" name="comment" rows="8">{{ Ctm::isOld() ? old('comment') : '' }}</textarea>
 
                                                 @if ($errors->has('comment'))
@@ -244,16 +246,22 @@ use App\Category;
 			
             <div class="single-right">
             	
-                <?php //================================================================= ?>
+                <?php //================================================================= 
+                	
+                    $isMe = (Auth::check() && Auth::id() == $userImg->user_id) ? 1 : 0;
                 
-                	<div class="py-4">
-                        <span class="icon-wrap">
-                            <img src="{{ Storage::url($user->icon_img_path) }}" class="img-fluid">
-                        </span>
-                        
-                        <a href="{{ url('profile/'. $user->id) }}">{{ $user->name }}</a>
-                	</div>
+                ?>
+                
+                
+                <div class="py-4">
+                    <div class="icon-wrap">
+                        <img src="{{ Storage::url($user->icon_img_path) }}" class="">
+                    </div>
                     
+                    <a href="{{ url('profile/'. $user->id) }}">{{ $user->name }}</a>
+                </div>
+                 
+                @if(! $isMe)   
                     <div class="favorite mb-3">
                         
                         @if(Auth::check())
@@ -276,70 +284,87 @@ use App\Category;
                             <small class="fav-str"><span class="loader"><i class="fas fa-square"></i></span>{{ $str }}</small> 
                             
                         @else
-                            <span class="fav-temp"><i class="far fa-heart"></i></span>
+                            <span class="fav-temp"><i class="fal fa-user-plus"></i></span>
                             <small class="fav-str"><a href="{{ url('login') }}"><b>ログイン</b></a>するとフォローできます</small>   
                         @endif
    
                     </div>
+                @endif
                  	
-                    <div class="prof">
-                    	<h3>プロフィール</h3>
-                    	<p class="text-small">{!! nl2br($user->profile) !!}</p>
-               		</div>
-                
-                
-                <div class="favorite my-4" data-type='single'>
-                    @if(Auth::check())
-                        <?php
-                            if($isGood) {
-                                $on = ' d-none';
-                                $off = ' d-inline'; 
-                                $str = 'いいね済み';              
-                            }
-                            else {
-                                $on = ' d-inline';
-                                $off = ' d-none';
-                                $str = 'いいね';
-                            }               
-                        ?>
-
-                        <span class="fav fav-on{{ $on }}" data-id="{{ $userImg->id }}" data-type="good"><i class="far fa-heart"></i></span>
-                        <span class="fav fav-off{{ $off }}" data-id="{{ $userImg->id }}" data-type="good"><i class="fas fa-heart"></i></span>
-                        
-                        <small class="fav-str"><span class="loader"><i class="fas fa-square"></i></span>{{ $str }}</small> 
-                        
-                    @else
-                        <span class="fav-temp"><i class="far fa-heart"></i></span>
-                        <small class="fav-str"><a href="{{ url('login') }}"><b>ログイン</b></a>するとお気に入りに登録できます</small>   
-                    @endif 	   
+                <div class="prof">
+                    <h4>プロフィール</h4>
+                    <p class="text-small">{!! nl2br($user->profile) !!}</p>
                 </div>
                 
-                <div class="favorite my-4" data-type='single'>
-                    @if(Auth::check())
-                        <?php
-                            if($isFav) {
-                                $on = ' d-none';
-                                $off = ' d-inline'; 
-                                $str = 'お気に入り済みです';              
-                            }
-                            else {
-                                $on = ' d-inline';
-                                $off = ' d-none';
-                                $str = 'お気に入りに保存';
-                            }               
-                        ?>
+                @if(! $isMe)
+                    <div class="favorite my-4" data-type='single'>
+                        @if(Auth::check())
+                            <?php
+                                if($isGood) {
+                                    $on = ' d-none';
+                                    $off = ' d-inline'; 
+                                    $str = 'いいね済み';              
+                                }
+                                else {
+                                    $on = ' d-inline';
+                                    $off = ' d-none';
+                                    $str = 'いいね';
+                                }               
+                            ?>
 
-                        <span class="fav fav-on{{ $on }}" data-id="{{ $userImg->id }}" data-type="favorite"><i class="far fa-folder-plus"></i></span>
-                        <span class="fav fav-off{{ $off }}" data-id="{{ $userImg->id }}" data-type="favorite"><i class="fas fa-folder-plus"></i></span>
+                            <span class="fav fav-on{{ $on }}" data-id="{{ $userImg->id }}" data-type="good"><i class="fal fa-heart"></i></span>
+                            <span class="fav fav-off{{ $off }}" data-id="{{ $userImg->id }}" data-type="good"><i class="fas fa-heart"></i></span>
+                            
+                            <small class="fav-str"><span class="loader"><i class="fas fa-square"></i></span>{{ $str }}</small> 
+                            
+                        @else
+                            <span class="fav-temp"><i class="fal fa-heart"></i></span>
+                            <small class="fav-str"><a href="{{ url('login') }}"><b>ログイン</b></a>するとお気に入りに登録できます</small>   
+                        @endif
                         
-                        <small class="fav-str"><span class="loader"><i class="fas fa-square"></i></span>{{ $str }}</small> 
+                    </div>
+                    
+                    <div class="good-sub-wrap text-small">
+                    	<?php $cGoods = $goods->take(3); ?>
                         
-                    @else
-                        <span class="fav-temp"><i class="far fa-folder-plus"></i></span>
-                        <small class="fav-str"><a href="{{ url('login') }}"><b>ログイン</b></a>するとお気に入りに登録できます</small>   
-                    @endif 	   
-                </div>
-                
+                        @foreach($cGoods as $good)
+                            <?php $u = User::find($good->user_id); ?>
+                            
+                            <a href="{{ url('profile/' . $u->id) }}">
+                            <span class="icon-wrap"><img src="{{ Storage::url($u->icon_img_path) }}" class=""></span>
+                            </a>
+                        @endforeach
+                        
+                        <span class="text-enji ml-2">{{ $goods->count() }}</span>人がいいねと言っています
+                    </div>
+                    
+                    
+                    <div class="favorite my-4" data-type='single'>
+                        @if(Auth::check())
+                            <?php
+                                if($isFav) {
+                                    $on = ' d-none';
+                                    $off = ' d-inline'; 
+                                    $str = 'お気に入り済みです';              
+                                }
+                                else {
+                                    $on = ' d-inline';
+                                    $off = ' d-none';
+                                    $str = 'お気に入りに保存';
+                                }               
+                            ?>
+
+                            <span class="fav fav-on{{ $on }}" data-id="{{ $userImg->id }}" data-type="favorite"><i class="fal fa-folder-plus"></i></span>
+                            <span class="fav fav-off{{ $off }}" data-id="{{ $userImg->id }}" data-type="favorite"><i class="fas fa-folder-plus"></i></span>
+                            
+                            <small class="fav-str"><span class="loader"><i class="fas fa-square"></i></span>{{ $str }}</small> 
+                            
+                        @else
+                            <span class="fav-temp"><i class="fal fa-folder-plus"></i></span>
+                            <small class="fav-str"><a href="{{ url('login') }}"><b>ログイン</b></a>するとお気に入りに登録できます</small>   
+                        @endif 	   
+                    </div>
+                @endif
                 
 				<div>
                 	<label>メインタグ</label><br>
